@@ -1,25 +1,35 @@
 import tkinter as tk
 import numpy as np
+from PIL import Image, ImageDraw
 
 class DrawingInterface:
     def __init__(self):
         self.grid_size = 28
-        self.cell_size = 15
+        self.cell_size = 10
+        self.radius = 12
+
+        self.pixel_grid = np.zeros((self.grid_size, self.grid_size))
+
+        self.width = self.grid_size * self.cell_size
+        self.height = self.grid_size * self.cell_size
 
         self.root = tk.Tk()
-        self.root.title("Draw Digit")
+        self.root.title("Digit_Recognition")
 
         self.canvas = tk.Canvas(self.root, 
-                                width = self.grid_size * self.cell_size,
-                                height= self.grid_size * self.cell_size,
+                                width = self.width,
+                                height= self.height,
                                 bg = 'black')
 
         self.canvas.pack()
 
-        self.pixel_grid = np.zeros((self.grid_size, self.grid_size))
+
+        self.image = Image.new("L", (self.width, self.height), color='black')
+        self.draw = ImageDraw.Draw(self.image)
 
         self.canvas.bind("<B1-Motion>", self.paint)
-        self.canvas.bind("<Button-1>", self.paint)
+
+        
 
         process_btn = tk.Button(self.root, text = "Process Grid", command = self.process_grid)
         process_btn.pack()
@@ -30,23 +40,22 @@ class DrawingInterface:
 
     def paint(self, event):
 
-        col = event.x // self.cell_size
-        row = event.y // self.cell_size
-
-        if 0 <= col < self.grid_size and 0 <= row < self.grid_size:
-            self.pixel_grid[row, col] = 255
-
-            x1 = col * self.cell_size
-            y1 = row * self.cell_size
-            x2 = x1 + self.cell_size
-            y2 = y1 + self.cell_size
-            self.canvas.create_rectangle(x1, y1, x2, y2, fill='white', outline='white')
+        x1, y1 = event.x - self.radius, event.y - self.radius
+        x2, y2 = event.x + self.radius, event.y + self.radius
+        self.canvas.create_oval(x1, y1, x2, y2, fill='white', outline='white')
+        self.draw.ellipse([x1, y1, x2, y2], fill='white')
 
     def clear(self):
         self.canvas.delete("all")
         self.pixel_grid.fill(0)
 
     def process_grid(self):
-        print("Grid captured! Current shape is:", self.pixel_grid.shape)
-
+        self.small_img = self.image.resize((self.grid_size, self.grid_size), Image.Resampling.LANCZOS)
+        self.pixel_grid = np.array(self.small_img)
+        
+        np.set_printoptions(linewidth=200)
+        
+        print("28x28 Pixel Array (0-255):")
+        print(self.pixel_grid)
+        
 DrawingInterface()
