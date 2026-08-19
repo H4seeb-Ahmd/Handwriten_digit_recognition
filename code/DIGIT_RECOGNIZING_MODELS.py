@@ -31,7 +31,9 @@ class KNN:
             print(f"KNN Classifier Accuracy: {knn_acc * 100:.2f}%")
             with open(self.model_filename, 'wb') as file:
                 pickle.dump(self.knn_clf, file)
-        print(f"{self.model_name} model loaded successfully!")      
+        print(f"{self.model_name} model loaded successfully!")
+    def model_prediction(self, entry):
+            return self.knn_clf.predict(entry)
 
 class NeuralNetworkLib:
     def __init__(self):
@@ -40,3 +42,10 @@ class NeuralNetworkLib:
 
         X_train = X_train_raw.reshape(X_train_raw.shape[0], 28 * 28)
         X_test = X_test_raw.reshape(X_test_raw.shape[0], 28 * 28)
+
+        X_train = X_train / 255.0
+        X_test = X_test / 255.0
+
+        if os.path.exists(self.model_filename):
+            with open(self.model_filename, 'rb') as file:
+                self.knn_clf = pickle.load(file)

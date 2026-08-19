@@ -64,7 +64,7 @@ class DrawingInterface:
 
         self.flat_image = self.pixel_grid.reshape(1, 784)
         
-        result = self.model.knn_clf.predict(self.flat_image)
+        result = self.model.model_prediction(self.flat_image)
         self.prediction.config(text = f"Predicted Digit: {result[0]}")
         
 DrawingInterface(Models.KNN)
