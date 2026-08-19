@@ -1,5 +1,4 @@
 import tkinter as tk
-from PIL import Image, ImageDraw
 import numpy as np
 
 class DrawingInterface:
@@ -22,7 +21,25 @@ class DrawingInterface:
         self.canvas.bind("<B1-Motion>", self.paint)
         self.canvas.bind("<Button-1>", self.paint)
 
-        btn = tk.Button(self.root, text = "Process Grid", command = self.process_gid)
+        btn = tk.Button(self.root, text = "Process Grid", command = self.process_grid)
         btn.pack()
-        
+
         self.root.mainloop()
+
+    def paint(self, event):
+
+        col = event.x // self.cell_size
+        row = event.y // self.cell_size
+
+        if 0 <= col < self.grid_size and 0 <= row < self.grid_size:
+            self.pixel_grid[row, col] = 255
+
+            x1 = col * self.cell_size
+            y1 = row * self.cell_size
+            x2 = x1 + self.cell_size
+            y2 = y1 + self.cell_size
+            self.canvas.create_rectangle(x1, y1, x2, y2, fill='white', outline='white')
+    def process_grid(self):
+        print("Grid captured! Current shape is:", self.pixel_grid.shape)
+
+DrawingInterface()
