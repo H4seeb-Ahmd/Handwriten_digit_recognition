@@ -18,7 +18,7 @@ class DrawingInterface:
 
         self.canvas = tk.Canvas(self.root, 
                                 width = self.width,
-                                height= self.height,
+                                height = self.height,
                                 bg = 'black')
 
         self.canvas.pack()
