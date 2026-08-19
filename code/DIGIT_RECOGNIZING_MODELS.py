@@ -1,7 +1,7 @@
 import idx2numpy
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import NNClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 import os
