@@ -1,6 +1,7 @@
 import idx2numpy
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import NNClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 import os
@@ -30,5 +31,12 @@ class KNN:
             print(f"KNN Classifier Accuracy: {knn_acc * 100:.2f}%")
             with open(self.model_filename, 'wb') as file:
                 pickle.dump(self.knn_clf, file)
-        print(f"{self.model_name} model loaded successfully!")        
+        print(f"{self.model_name} model loaded successfully!")      
 
+class NeuralNetworkLib:
+    def __init__(self):
+        self.model_filename = 'TRAINED/nn_model.bin'
+        self.model_name = "Neural Network (Library)"  
+
+        X_train = X_train_raw.reshape(X_train_raw.shape[0], 28 * 28)
+        X_test = X_test_raw.reshape(X_test_raw.shape[0], 28 * 28)
