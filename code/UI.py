@@ -1,9 +1,11 @@
 import tkinter as tk
 import numpy as np
 from PIL import Image, ImageDraw
+import DIGIT_RECOGNIZING_MODELS as Models
 
 class DrawingInterface:
-    def __init__(self):
+    def __init__(self, model):
+        self.model = model()
         self.grid_size = 28
         self.cell_size = 10
         self.radius = 12
@@ -15,6 +17,10 @@ class DrawingInterface:
 
         self.root = tk.Tk()
         self.root.title("Digit_Recognition")
+
+        self.prediction = tk.Label(self.root, text = "(prediction)")
+
+        self.prediction.pack()
 
         self.canvas = tk.Canvas(self.root, 
                                 width = self.width,
@@ -47,15 +53,18 @@ class DrawingInterface:
 
     def clear(self):
         self.canvas.delete("all")
+        self.prediction.config(text = f"(prediction)")
         self.pixel_grid.fill(0)
+        self.image = Image.new("L", (self.width, self.height), color='black')
+        self.draw = ImageDraw.Draw(self.image)
 
     def process_grid(self):
         self.small_img = self.image.resize((self.grid_size, self.grid_size), Image.Resampling.LANCZOS)
         self.pixel_grid = np.array(self.small_img)
+
+        self.flat_image = self.pixel_grid.reshape(1, 784)
         
-        np.set_printoptions(linewidth=200)
+        result = self.model.knn_clf.predict(self.flat_image)
+        self.prediction.config(text = f"Predicted Digit: {result[0]}")
         
-        print("28x28 Pixel Array (0-255):")
-        print(self.pixel_grid)
-        
-DrawingInterface()
+DrawingInterface(Models.KNN)
