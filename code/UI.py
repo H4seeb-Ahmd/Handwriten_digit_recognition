@@ -66,5 +66,6 @@ class DrawingInterface:
         
         result = self.model.model_prediction(self.flat_image)
         self.prediction.config(text = f"Predicted Digit: {result[0]}")
-        
-DrawingInterface(Models.KNN)
+
+if __name__ == "__main__":
+    DrawingInterface(Models.NeuralNetworkLib)

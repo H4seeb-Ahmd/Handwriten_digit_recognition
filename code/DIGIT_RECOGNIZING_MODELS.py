@@ -48,4 +48,26 @@ class NeuralNetworkLib:
 
         if os.path.exists(self.model_filename):
             with open(self.model_filename, 'rb') as file:
-                self.knn_clf = pickle.load(file)
+                self.nn_clf = pickle.load(file)
+        else:
+            print("Training KNN Classifier...")
+            self.nn_clf = MLPClassifier(
+                hidden_layer_sizes = (128,),
+                activation = 'relu',
+                solver = 'adam',
+                max_iter = 20
+            )
+
+            self.nn_clf.fit(X_train, y_train)
+
+            mlp_preds = self.nn_clf.predict(X_test)
+            mlp_acc = accuracy_score(y_test, mlp_preds)
+            print(f"Neural Network Accuracy: {mlp_acc * 100:.2f}%")
+            
+            with open(self.model_filename, 'wb') as file:
+                pickle.dump(self.nn_clf, file)
+                
+        print(f"{self.model_name} model loaded successfully!")
+
+    def model_prediction(self, entry):
+            return self.nn_clf.predict(entry)
