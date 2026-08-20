@@ -3,13 +3,28 @@ import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
-import pickle
 import os
 
-X_train_raw = idx2numpy.convert_from_file('DATASET/train-images.idx3-ubyte')
-y_train = idx2numpy.convert_from_file('DATASET/train-labels.idx1-ubyte')
-X_test_raw = idx2numpy.convert_from_file('DATASET/t10k-images.idx3-ubyte')
-y_test = idx2numpy.convert_from_file('DATASET/t10k-labels.idx1-ubyte')
+
+variables_filename = 'dataset.npz'
+
+if os.path.exists(variables_filename):
+    data = np.load(variables_filename)
+    X_train_raw = data['X_train']
+    y_train = data['y_train']
+    X_test_raw = data['X_test']
+    y_test = data['y_test']
+else:
+    X_train_raw = idx2numpy.convert_from_file('DATASET/train-images.idx3-ubyte')
+    y_train = idx2numpy.convert_from_file('DATASET/train-labels.idx1-ubyte')
+    X_test_raw = idx2numpy.convert_from_file('DATASET/t10k-images.idx3-ubyte')
+    y_test = idx2numpy.convert_from_file('DATASET/t10k-labels.idx1-ubyte')
+    
+    np.savez(variables_filename, 
+             X_train=X_train_raw, 
+             y_train=y_train, 
+             X_test=X_test_raw, 
+             y_test=y_test)
 
 class KNN:
     def __init__(self):
