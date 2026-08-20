@@ -7,11 +7,13 @@ class DrawingInterface:
     def __init__(self, model):
         self.model = model()
         self.grid_size = 28
-        self.cell_size = 10
-        self.radius = 12
+        self.cell_size = 20
+        self.radius = 25
 
         self.pixel_grid = np.zeros((self.grid_size, self.grid_size))
 
+
+        self.grid_inputs = self.grid_size * self.grid_size
         self.width = self.grid_size * self.cell_size
         self.height = self.grid_size * self.cell_size
 
@@ -62,7 +64,7 @@ class DrawingInterface:
         self.small_img = self.image.resize((self.grid_size, self.grid_size), Image.Resampling.LANCZOS)
         self.pixel_grid = np.array(self.small_img)
 
-        self.flat_image = self.pixel_grid.reshape(1, 784)
+        self.flat_image = self.pixel_grid.reshape(1, self.grid_inputs)
         
         result = self.model.model_prediction(self.flat_image)
         self.prediction.config(text = f"Predicted Digit: {result[0]}")
